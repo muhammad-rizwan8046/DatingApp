@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UserController
+    [Authorize] //To authorize using token
+    public class UserController : BaseController
     {
         private readonly DataContext _Context;
 
@@ -20,6 +20,7 @@ namespace API.Controllers
             _Context = context;
         }
 
+        [AllowAnonymous] //To allow for without authorization
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
