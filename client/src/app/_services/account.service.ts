@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UrlSerializer } from '@angular/router';
 import { BehaviorSubject, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   //<User | null> Union type
   private currentUserSource = new BehaviorSubject<User | null>(null);
   //$ signifies this as unobservable
