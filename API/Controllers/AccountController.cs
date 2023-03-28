@@ -45,14 +45,18 @@ namespace API.Controllers
 
             return new UserDTO{
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.Username);
+            //Here data context is accessed directly not from repository but photos is a related entity
+            var user = await _context.Users.
+                        Include(p => p.Photos).
+                        SingleOrDefaultAsync(x => x.UserName == loginDTO.Username);
 
             if(user == null) return Unauthorized("Invalid Username");
 
@@ -67,7 +71,8 @@ namespace API.Controllers
 
             return new UserDTO{
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
         }
 
